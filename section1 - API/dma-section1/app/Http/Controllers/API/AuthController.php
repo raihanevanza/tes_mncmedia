@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -16,25 +16,27 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'c_password' => 'required|same:password',
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return response()->json([
+                'status' => 500,
+                'message' => $validator->getMessageBag()
+            ], 200);
         }
 
         $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
+        $input['password'] = $input['password'];
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
         $success['name'] =  $user->name;
 
-        return $this->sendResponse($success, 'User register successfully.');
+        return  response()->json(['message' => 'User register successfully.', 'data' => $success]);
     }
 
     public function login(Request $request)
     {
-        $user = User::where(['email' => $request->email])->first();
+        $user = User::where(['email' => $request->email, 'password' => $request->password])->first();
         if (!$user) {
             return response()->json([
                 'message' => 'unauthorized'

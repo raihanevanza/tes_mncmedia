@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/index', [InvoiceController::class, 'index']);
     Route::get('/show/{date}', [InvoiceController::class, 'show']);
+    Route::delete('/delete/{invoice_no}', [InvoiceController::class, 'delete']);
     Route::post('/store', [InvoiceController::class, 'store']);
     Route::post('/update', [InvoiceController::class, 'update']);
 });
