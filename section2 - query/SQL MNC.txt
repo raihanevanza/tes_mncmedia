@@ -1,0 +1,8 @@
+SELECT B.nama
+FROM tbl_teman A 
+	JOIN tbl_siswa B ON A.id = B.id
+	JOIN tbl_siswa C ON A.teman_id = C.id
+	JOIN tbl_paket D ON A.id = D.id
+	JOIN tbl_paket E ON A.TEMAN_ID = E.id
+WHERE E.salary > D.salary
+ORDER BY E.salary ASC
